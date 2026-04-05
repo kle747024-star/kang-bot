@@ -3,28 +3,36 @@ from discord.ext import commands
 import os
 import asyncio
 
-def create_bot():
+def create_bot(name):
     intents = discord.Intents.all()
     bot = commands.Bot(command_prefix="!", intents=intents)
 
     @bot.event
     async def on_ready():
-        print(f"Đã đăng nhập: {bot.user}")
+        print(f"✅ {name} đăng nhập: {bot.user}")
 
     return bot
 
-async def start_bot(token):
-    bot = create_bot()
-    await bot.start(token)
+async def start_bot(token, name):
+    print(f"{name} TOKEN:", token)  # 🔥 debug token
+
+    if not token:
+        print(f"❌ {name} thiếu TOKEN")
+        return
+
+    bot = create_bot(name)
+
+    try:
+        await bot.start(token)
+    except Exception as e:
+        print(f"❌ {name} lỗi:", e)
 
 async def main():
-    tokens = [
-        os.getenv("TOKEN_1"),
-        os.getenv("TOKEN_2"),
-        os.getenv("TOKEN_3"),
-        os.getenv("TOKEN_4"),
-    ]
-
-    await asyncio.gather(*(start_bot(t) for t in tokens if t))
+    await asyncio.gather(
+        start_bot(os.getenv("TOKEN_1"), "Bot 1"),
+        start_bot(os.getenv("TOKEN_2"), "Bot 2"),
+        start_bot(os.getenv("TOKEN_3"), "Bot 3"),
+        start_bot(os.getenv("TOKEN_4"), "Bot 4"),
+    )
 
 asyncio.run(main())
