@@ -1,38 +1,39 @@
 import discord
 from discord.ext import commands
 import os
-import asyncio
 
-def create_bot(name):
-    intents = discord.Intents.all()
-    bot = commands.Bot(command_prefix="!", intents=intents)
+TOKEN = os.getenv("TOKEN")
 
-    @bot.event
-    async def on_ready():
-        print(f"✅ {name} đăng nhập: {bot.user}")
+intents = discord.Intents.default()
+intents.voice_states = True
+intents.guilds = True
 
-    return bot
+bot = commands.Bot(command_prefix="!", intents=intents)
 
-async def start_bot(token, name):
-    print(f"{name} TOKEN:", token)  # 🔥 debug token
+@bot.event
+async def on_ready():
+    print(f"Đã đăng nhập: {bot.user}")
+  
+    channel_id = 1490092888539926711  
 
-    if not token:
-        print(f"❌ {name} thiếu TOKEN")
-        return
+    channel = bot.get_channel(channel_id)
 
-    bot = create_bot(name)
+    if channel is not None:
+        vc = await channel.connect()
 
-    try:
-        await bot.start(token)
-    except Exception as e:
-        print(f"❌ {name} lỗi:", e)
+        # 👉 tắt mic + tắt loa
+        await vc.guild.change_voice_state(
+            channel=channel,
+            self_mute=True,
+            self_deaf=True
+        )
 
-async def main():
-    await asyncio.gather(
-        start_bot(os.getenv("TOKEN_1"), "Bot 1"),
-        start_bot(os.getenv("TOKEN_2"), "Bot 2"),
-        start_bot(os.getenv("TOKEN_3"), "Bot 3"),
-        start_bot(os.getenv("TOKEN_4"), "Bot 4"),
-    )
+        print("Đã vào voice + tắt mic, loa")
+    else:
+        print("Không tìm thấy channel")
 
-asyncio.run(main())
+if not TOKEN:
+    print("❌ Không tìm thấy TOKEN")
+else:
+    print("✅ TOKEN OK")
+    bot.run(TOKEN)
