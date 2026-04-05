@@ -1,5 +1,6 @@
 import discord
 import asyncio
+import os
 
 intents = discord.Intents.default()
 
@@ -26,10 +27,10 @@ async def on_ready():
 
 async def main():
     await asyncio.gather(
-        bot1.start("TOKEN_1"),
-        bot2.start("TOKEN_2"),
-        bot3.start("TOKEN_3"),
-        bot4.start("TOKEN_4"),
+        bot1.start(os.getenv("TOKEN_1")),
+        bot2.start(os.getenv("TOKEN_2")),
+        bot3.start(os.getenv("TOKEN_3")),
+        bot4.start(os.getenv("TOKEN_4")),
     )
 
 asyncio.run(main())
