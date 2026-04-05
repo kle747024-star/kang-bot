@@ -37,3 +37,4 @@ if not TOKEN:
 else:
     print("✅ TOKEN OK")
     bot.run(TOKEN)
+    # update
