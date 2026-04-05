@@ -32,4 +32,8 @@ async def on_ready():
     else:
         print("Không tìm thấy channel")
 
-bot.run(TOKEN)
+if not TOKEN:
+    print("❌ Không tìm thấy TOKEN")
+else:
+    print("✅ TOKEN OK")
+    bot.run(TOKEN)
