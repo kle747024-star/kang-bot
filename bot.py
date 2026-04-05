@@ -1,39 +1,35 @@
 import discord
-from discord.ext import commands
-import os
-
-TOKEN = os.getenv("TOKEN")
+import asyncio
 
 intents = discord.Intents.default()
-intents.voice_states = True
-intents.guilds = True
 
-bot = commands.Bot(command_prefix="!", intents=intents)
+# ===== BOT 1 =====
+bot1 = discord.Client(intents=intents)
 
-@bot.event
+@bot1.event
 async def on_ready():
-    print(f"Đã đăng nhập: {bot.user}")
-  
-    channel_id = 1490092888539926711  
+    print(f"Bot 1 đã đăng nhập: {bot1.user}")
 
-    channel = bot.get_channel(channel_id)
+# ===== BOT 2 =====
+bot2 = discord.Client(intents=intents)
 
-    if channel is not None:
-        vc = await channel.connect()
+@bot2.event
+async def on_ready():
+    print(f"Bot 2 đã đăng nhập: {bot2.user}")
 
-        # 👉 tắt mic + tắt loa
-        await vc.guild.change_voice_state(
-            channel=channel,
-            self_mute=True,
-            self_deaf=True
-        )
+# ===== BOT 3 (nếu cần) =====
+bot3 = discord.Client(intents=intents)
 
-        print("Đã vào voice + tắt mic, loa")
-    else:
-        print("Không tìm thấy channel")
+@bot3.event
+async def on_ready():
+    print(f"Bot 3 đã đăng nhập: {bot3.user}")
 
-if not TOKEN:
-    print("❌ Không tìm thấy TOKEN")
-else:
-    print("✅ TOKEN OK")
-    bot.run(TOKEN)
+# ===== CHẠY CÙNG LÚC =====
+async def main():
+    await asyncio.gather(
+        bot1.start("TOKEN_1"),
+        bot2.start("TOKEN_2"),
+        bot3.start("TOKEN_3")  # có thể xoá nếu không dùng
+    )
+
+asyncio.run(main())
