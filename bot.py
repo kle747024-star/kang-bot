@@ -1,36 +1,30 @@
 import discord
-import asyncio
+from discord.ext import commands
 import os
+import asyncio
 
-intents = discord.Intents.default()
+def create_bot():
+    intents = discord.Intents.all()
+    bot = commands.Bot(command_prefix="!", intents=intents)
 
-bot1 = discord.Client(intents=intents)
-bot2 = discord.Client(intents=intents)
-bot3 = discord.Client(intents=intents)
-bot4 = discord.Client(intents=intents)
+    @bot.event
+    async def on_ready():
+        print(f"Đã đăng nhập: {bot.user}")
 
-@bot1.event
-async def on_ready():
-    print(f"Bot 1: {bot1.user}")
+    return bot
 
-@bot2.event
-async def on_ready():
-    print(f"Bot 2: {bot2.user}")
-
-@bot3.event
-async def on_ready():
-    print(f"Bot 3: {bot3.user}")
-
-@bot4.event
-async def on_ready():
-    print(f"Bot 4: {bot4.user}")
+async def start_bot(token):
+    bot = create_bot()
+    await bot.start(token)
 
 async def main():
-    await asyncio.gather(
-        bot1.start(os.getenv("TOKENKANG")),
-        bot2.start(os.getenv("TOKENBONG")),
-        bot3.start(os.getenv("TOKENTHAO")),
-        bot4.start(os.getenv("TOKENNAM")),
-    )
+    tokens = [
+        os.getenv("TOKEN_1"),
+        os.getenv("TOKEN_2"),
+        os.getenv("TOKEN_3"),
+        os.getenv("TOKEN_4"),
+    ]
+
+    await asyncio.gather(*(start_bot(t) for t in tokens if t))
 
 asyncio.run(main())
