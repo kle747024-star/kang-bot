@@ -27,10 +27,10 @@ async def on_ready():
 
 async def main():
     await asyncio.gather(
-        bot1.start(os.getenv("TOKEN_1")),
-        bot2.start(os.getenv("TOKEN_2")),
-        bot3.start(os.getenv("TOKEN_3")),
-        bot4.start(os.getenv("TOKEN_4")),
+        bot1.start(os.getenv("TOKENKANG")),
+        bot2.start(os.getenv("TOKENBONG")),
+        bot3.start(os.getenv("TOKENTHAO")),
+        bot4.start(os.getenv("TOKENNAM")),
     )
 
 asyncio.run(main())
